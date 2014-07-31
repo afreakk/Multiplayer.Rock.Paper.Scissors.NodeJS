@@ -23,8 +23,8 @@ AGame.prototype.noticeFull=function()
         var keys = Object.keys(this.players);
         var playerA = this.players[keys[0]];
         var playerB = this.players[keys[1]];
-        playerB.sendMsg('playerinfo', playerA.name);
-        playerA.sendMsg('playerinfo', playerB.name);
+        playerB.sendMsg('join', playerA.name);
+        playerA.sendMsg('join', playerB.name);
     }
 };
 AGame.prototype.removePlayer=function(client)

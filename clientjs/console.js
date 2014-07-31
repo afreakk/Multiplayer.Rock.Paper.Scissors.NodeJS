@@ -1,6 +1,7 @@
 var Console = function()
 {
     this.lines = [];
+    document.getElementById("console").innerHTML = "<p>Are you ready 2 Rock;PAPER;SCISSORS!?<p>";
 };
 Console.prototype.appendText = function(msg)
 {

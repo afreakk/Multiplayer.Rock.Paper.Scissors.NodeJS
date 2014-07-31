@@ -2,21 +2,29 @@
 <head>
     <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
-<body>
+<body onload="init();">
     <div id="login" class="gui gui_mid">
         <h1>Nick:</h1>
         <input type="text" id="nick_input">  
     </div>
     <div id="player_stats">
-        <p id="player_count">Players: 1/2</p>
-        <p id="opponent">Opponent: None</p>
+        <a id="nick">Nick: </a>
+        <a id="win-streak">Win-Streak: 0</a>
+        <a id="player_count">Players: 1/2</a>
+        <a id="opponent">Opponent: None</a>
     </div>
     <div id="main_screen" class="gui gui_mid">
         <div id="choose_screen">
-            <p>Choose Rock, Paper, or Scissor<p>
-            <button type="button" onclick="sendRock();">Rock</button>
-            <button type="button" onclick="sendPaper();">Paper</button>
-            <button type="button" onclick="sendScissor();">Scissors</button>
+            <p>Choose Rock, Paper, or Scissor!<p>
+            <button type="button" onclick="sendRock();" class="btn">Rock!</button>
+            <button type="button" onclick="sendPaper();" class="btn">Paper!</button>
+            <button type="button" onclick="sendScissor();" class="btn">Scissor!</button>
+        </div>
+        <div id="selected_screen">
+            <p id="selected_text">placeholder</p>
+        </div>
+        <div id="result_screen">
+            <p id="result_text">RESULT !</p>
         </div>
     </div>
     <div id="console" class="gui">
@@ -24,30 +32,56 @@
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
     <script src="/clientjs/socket.js"></script>
     <script src="/clientjs/console.js"></script>
-    <script src="/clientjs/gui.js"></script>
+    <script src="/clientjs/login.js"></script>
     <script src="/clientjs/utils.js"></script>
+    <script src="/clientjs/mainscreen.js"></script>
     <script>
     var nick = null;
     var userConsole = null;
     var socket = null;
-    window.onkeyup = function(e)
+    var mainScreen = null;
+    var loginScreen = null;
+    var bottomBar =  {};
+    var winStreak = 0;
+    function init()
     {
-       if (e.keyCode == 13 && document.getElementById("nick_input").value.length > 0) 
-       {
-           main();
-           loginComplete();
-           showMainScreen();
-           document.getElementById("main_screen").innerHTML = "<h1> Welcome: "+nick + "</h1>"+ document.getElementById("main_screen").innerHTML;
-       }
-    }
-    function main()
-    {
+        loginScreen = new LoginScreen(appStart);
+        mainScreen = new MainScreen();
         userConsole = new Console();
+    }
+    function appStart(nick)
+    {
+        initBottomBar(nick);
         socket = new Socket();
+        socket.changeNick(nick);
         socket.s.on("servermsg", function(msg) { userConsole.appendText(msg); });
         socket.s.on("results", showResults);
-        socket.s.on("playerinfo", showPlayerNick);
+        socket.s.on("join", playerJoin);
         socket.s.on("part", playerLeft);
+
+        mainScreen.init();
+    }
+    function initBottomBar(nick)
+    {
+        var elm_names = ["win-streak", "player_count", "opponent", "nick"];
+        for(var i=0; i<elm_names.length; i++)
+            bottomBar[elm_names[i]] = new TextElem(elm_names[i]);
+
+        bottomBar.nick.setText("Nick: "+nick);
+    }
+    function playerJoin(nick)
+    {
+        bottomBar.player_count.setText("Players: 2/2");
+        bottomBar.opponent.setText("Opponent: "+nick);
+
+        userConsole.appendText(nick+" joined the game.");
+    }
+    function playerLeft(nick)
+    {
+        bottomBar.player_count.setText("Players: 1/2");
+        bottomBar.opponent.setText("Opponent: None");
+
+        userConsole.appendText(nick+" left the game.");
     }
     </script>
 </body>
