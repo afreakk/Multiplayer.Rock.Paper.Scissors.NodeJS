@@ -1,0 +1,54 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+    <div id="login" class="gui gui_mid">
+        <h1>Nick:</h1>
+        <input type="text" id="nick_input">  
+    </div>
+    <div id="player_stats">
+        <p id="player_count">Players: 1/2</p>
+        <p id="opponent">Opponent: None</p>
+    </div>
+    <div id="main_screen" class="gui gui_mid">
+        <div id="choose_screen">
+            <p>Choose Rock, Paper, or Scissor<p>
+            <button type="button" onclick="sendRock();">Rock</button>
+            <button type="button" onclick="sendPaper();">Paper</button>
+            <button type="button" onclick="sendScissor();">Scissors</button>
+        </div>
+    </div>
+    <div id="console" class="gui">
+    </div>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script src="/clientjs/socket.js"></script>
+    <script src="/clientjs/console.js"></script>
+    <script src="/clientjs/gui.js"></script>
+    <script src="/clientjs/utils.js"></script>
+    <script>
+    var nick = null;
+    var userConsole = null;
+    var socket = null;
+    window.onkeyup = function(e)
+    {
+       if (e.keyCode == 13 && document.getElementById("nick_input").value.length > 0) 
+       {
+           main();
+           loginComplete();
+           showMainScreen();
+           document.getElementById("main_screen").innerHTML = "<h1> Welcome: "+nick + "</h1>"+ document.getElementById("main_screen").innerHTML;
+       }
+    }
+    function main()
+    {
+        userConsole = new Console();
+        socket = new Socket();
+        socket.s.on("servermsg", function(msg) { userConsole.appendText(msg); });
+        socket.s.on("results", showResults);
+        socket.s.on("playerinfo", showPlayerNick);
+        socket.s.on("part", playerLeft);
+    }
+    </script>
+</body>
+</html>
