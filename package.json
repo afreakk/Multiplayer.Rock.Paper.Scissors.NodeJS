@@ -5,7 +5,7 @@
   "private": false,
   "dependencies": {
     "express": "3.x",
-    "uuid": "1.4.1",
+    "node-uuid": "1.4.1",
     "socket.io": "~0.9.6"
   },
   "scripts": {
