@@ -1,24 +1,25 @@
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet/less" type="text/css" href="css/style.less" />
+    <script type="text/javascript" src="/clientjslibs/less-1.7.3.min.js"></script>
 </head>
 <body onload="init();">
     <div id="login" class="gui gui_mid">
         <h1>Nick:</h1>
-        <input type="text" id="nick_input">  
+        <input type="text" id="nick_input" autofocus>  
     </div>
-    <div id="player_stats">
-        <a id="nick">Nick: </a>
-        <a id="win-streak">Win-Streak: 0</a>
-        <a id="player_count">Players: 1/2</a>
-        <a id="opponent">Opponent: None</a>
+    <div id="player_stats"> -:|:- 
+        <a id="nick">Nick: </a> -:|:-  
+        <a id="win-streak">Win-Streak: 0</a> -:|:- 
+        <a id="player_count">Players: 1/2</a> -:|:- 
+        <a id="opponent">Opponent: None</a> -:|:- 
     </div>
     <div id="main_screen" class="gui gui_mid">
         <div id="choose_screen">
             <p>Choose Rock, Paper, or Scissor!<p>
-            <button type="button" onclick="sendRock();" class="btn">Rock!</button>
-            <button type="button" onclick="sendPaper();" class="btn">Paper!</button>
-            <button type="button" onclick="sendScissor();" class="btn">Scissor!</button>
+            <button type="button" onclick="doMove('r');" class="btn">Rock!</button>
+            <button type="button" onclick="doMove('p');" class="btn">Paper!</button>
+            <button type="button" onclick="doMove('s');" class="btn">Scissor!</button>
         </div>
         <div id="selected_screen">
             <p id="selected_text">placeholder</p>
@@ -29,59 +30,77 @@
     </div>
     <div id="console" class="gui">
     </div>
+    <div id="chat_window" class="gui">
+    <input type="text" id="chat_input" placeholder="Type to chat with opponent.">  
+    </div>
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-    <script src="/clientjs/socket.js"></script>
-    <script src="/clientjs/console.js"></script>
-    <script src="/clientjs/login.js"></script>
-    <script src="/clientjs/utils.js"></script>
-    <script src="/clientjs/mainscreen.js"></script>
-    <script>
+    <script type="text/javascript" src="/clientjs/socket.js"></script>
+    <script type="text/javascript" src="/clientjs/console.js"></script>
+    <script type="text/javascript" src="/clientjs/login.js"></script>
+    <script type="text/javascript" src="/clientjs/htmltools.js"></script>
+    <script type="text/javascript" src="/clientjs/utils.js"></script>
+    <script type="text/javascript" src="/clientjs/mainscreen.js"></script>
+    <script type="text/javascript" src="/clientjs/chatinput.js"></script>
+    <script type="text/javascript" src="/clientjs/inputmgr.js"></script>
+    <script type="text/javascript">
     var nick = null;
     var userConsole = null;
     var socket = null;
     var mainScreen = null;
     var loginScreen = null;
+    var chatInput = null;
+    var inputMgr = null;
     var bottomBar =  {};
     var winStreak = 0;
+    var opponentName = "";
     function init()
     {
+        initInputMgr();
+        inputMgr = getInputMgr();
         loginScreen = new LoginScreen(appStart);
         mainScreen = new MainScreen();
-        userConsole = new Console();
+        userConsole = new Console(6);
+        chatInput = new ChatInput();
+        initBottomBar();
     }
     function appStart(nick)
     {
-        initBottomBar(nick);
+        chatInput.show();
+        chatInput.focus();
+
         socket = new Socket();
         socket.changeNick(nick);
         socket.s.on("servermsg", function(msg) { userConsole.appendText(msg); });
         socket.s.on("results", showResults);
         socket.s.on("join", playerJoin);
         socket.s.on("part", playerLeft);
+        socket.s.on("chat", handleChat);
 
         mainScreen.init();
+        userConsole.appendText("Welcome "+nick+" :o)");
+        bottomBar.nick.setText("Nick: "+nick);
+    }
+    function handleChat(msg)
+    {
+        userConsole.appendText(msg);
     }
     function initBottomBar(nick)
     {
         var elm_names = ["win-streak", "player_count", "opponent", "nick"];
         for(var i=0; i<elm_names.length; i++)
-            bottomBar[elm_names[i]] = new TextElem(elm_names[i]);
-
-        bottomBar.nick.setText("Nick: "+nick);
+            bottomBar[elm_names[i]] = new HTMLElement(elm_names[i], true, "inline");
     }
-    function playerJoin(nick)
+    function playerJoin(name)
     {
-        bottomBar.player_count.setText("Players: 2/2");
-        bottomBar.opponent.setText("Opponent: "+nick);
-
-        userConsole.appendText(nick+" joined the game.");
+        opponentName = name;
+        bottomBar.opponent.setText("Opponent: "+opponentName);
+        userConsole.appendText(opponentName+" joined the game.");
     }
-    function playerLeft(nick)
+    function playerLeft(name)
     {
         bottomBar.player_count.setText("Players: 1/2");
         bottomBar.opponent.setText("Opponent: None");
-
-        userConsole.appendText(nick+" left the game.");
+        userConsole.appendText(name+" left the game.");
     }
     </script>
 </body>

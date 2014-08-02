@@ -1,0 +1,132 @@
+// Colorz
+@bgColor: #312F36;
+@guiColor:#4F4D43;
+@consoleColor:#0C0C0A;
+@consoleTextClr: #403E2E;
+
+@btnGradBgn: #403E2E;
+@btnGradEnd: #454438;
+@btnHover: #1F1E1A;
+
+@playerStatsBg:#070708;
+@playerStatsTxt:#454438;
+@inputColor:#25212C;
+@chatBorderColor:#403E2E;
+
+// --:)
+// Structure
+@margTop: 10%;
+@margBot: 10%;
+body
+{
+    background-color: @bgColor;
+    margin-top: @margTop;
+    margin-bottom: @margBot;
+}
+.gui
+{
+    background-color: @guiColor;
+    width: 50%;
+    height: 20%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    list-style-type: none;
+    transition: all 1s ease-in-out;
+    font-family: "Lucida Console", Monaco, monospace;
+}
+.gui_mid
+{
+    padding-top: 1.0em;
+    padding-bottom: 4em;
+    border-top-left-radius:0.25em;
+    border-top-right-radius:0.25em;
+    font-size: 2em;
+}
+#console
+{
+    color: @consoleTextClr;
+    background-color: @consoleColor;
+    padding-top: 0.1em;
+    padding-bottom: 4em;
+    line-height: 0.5em;
+    text-align: left;
+    z-index: -1;
+}
+.btn {
+    border:none;
+    font-size: 1.75em;
+
+    background: @btnGradBgn; /* Old browsers */
+    background: -moz-linear-gradient(top,  @btnGradBgn 0%, @btnGradEnd 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, @btnGradBgn), color-stop(100%,@btnGradEnd)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  @btnGradBgn 0%, @btnGradEnd 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  @btnGradBgn 0%, @btnGradEnd 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  @btnGradBgn 0%, @btnGradEnd 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  @btnGradBgn 0%, @btnGradEnd 100%); /* W3C */
+}
+.btn:hover {
+    background:@btnHover;
+}
+
+
+
+
+
+
+#player_stats
+{
+    position:fixed; 
+    bottom:0px;
+    left: 0px;
+    width:100%; 
+    height:1.75em; 
+    text-align: center;
+    color: @playerStatsTxt;
+    background-color: @playerStatsBg;
+}
+#chat_window
+{
+    border: 0px;
+    width: 50%;
+    height: 12.5%;
+    border-bottom-left-radius:0.5em;
+    border-bottom-right-radius:0.5em;
+    text-align: center;
+    padding-top: 1%;
+    background-color: @chatBorderColor;
+}
+#chat_input
+{
+    width: 97.5%;
+    height: 75%;
+    font-size: 2em;
+}
+@inputTextColorPlaceholder:#2A272F;
+@inputTextColor:#070708;
+input
+{
+    color: @inputTextColor;
+    border: 0px;
+    width: 50%;
+    height: 50%;
+    font-size: 120%;
+    padding-left: 0.1em;
+    background-color: @inputColor;
+    margin-left: auto;
+    margin-right: auto;
+}
+::-webkit-input-placeholder { /* WebKit browsers */
+    color:    @inputTextColorPlaceholder;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color:    @inputTextColorPlaceholder;
+    opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color:    @inputTextColorPlaceholder;
+    opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color:    @inputTextColorPlaceholder;
+}

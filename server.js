@@ -1,11 +1,3 @@
-/*  Copyright (c) 2012 Sven "FuzzYspo0N" Bergström 
-    
-    http://underscorediscovery.com
-    
-    MIT Licensed. See LICENSE for full license.
- 
-    Usage : node simplest.app.js
-*/
    var 
         gameport        = process.env.PORT || 4004,
         io              = require('socket.io'),
@@ -22,10 +14,7 @@
 //and will serve any file the user requests from the root of your web server (where you launch the script from)
 //so keep this in mind - this is not a production script but a development teaching tool.
  
-    //Tell the server to listen for incoming connections
 server.listen( gameport );
-
-    //Log something so we know that it succeeded.
 console.log('\t :: Express :: Listening on port ' + gameport );
 
     //By default, we forward the / path to index.html automatically.
@@ -81,6 +70,9 @@ sio.sockets.on('connection', function (client)
     });
     client.on('nick', function(nick) {
         gameServer.handleNickChange(client, nick);
+    });
+    client.on('chat', function(msg) {
+        gameServer.handleChat(client, msg);
     });
      
 });

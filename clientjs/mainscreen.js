@@ -1,22 +1,4 @@
 
-var HTMLElement = function(id, visible)
-{
-    this.elem = document.getElementById(id);
-    this.id = id;
-    this.visible = visible;
-    if(this.visible)
-        this.show();
-    else
-        this.hide();
-};
-HTMLElement.prototype.show=function()
-{
-    this.elem.style.display = "block";
-};
-HTMLElement.prototype.hide=function()
-{
-    this.elem.style.display = "none";
-};
 var MainScreen = function()
 {
     this.main = new HTMLElement("main_screen", false);

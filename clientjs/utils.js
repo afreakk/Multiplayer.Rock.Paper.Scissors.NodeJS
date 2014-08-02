@@ -1,26 +1,34 @@
-var TextElem = function(id)
+function getStringTime() 
 {
-    this.id = id;
-    this.elem = document.getElementById(id);
-};
-TextElem.prototype.setText = function(text)
-{
-    this.elem.innerHTML = text;
-};
+    var today=new Date();
+    var h=today.getHours();
+    var m=today.getMinutes();
+    var s=today.getSeconds();
+    h = twoDig(h);
+    m = twoDig(m);
+    s = twoDig(s);
+    return h+":"+m+":"+s;
+}
+
+function twoDig(nmb) {
+    if (nmb<10) 
+        nmb = "0" + nmb; 
+    return nmb;
+}
 
 function expandRPS(choice)
 {
     if(choice === "r")
-        return "rock";
+        return "Rock";
     if(choice === "p")
-        return "paper";
+        return "Paper";
     if(choice === "s")
-        return "scissor";
+        return "Scissor";
 }
 function createConsoleResultMsg(otherPlayer)
 {
     var str = otherPlayer.name+" picked: "+expandRPS(otherPlayer.choice)+", and ";
-    str +=otherPlayer.result === 1 ? "won." : otherPlayer.result === null ? "it was a draw." : "lost.";
+    str += otherPlayer.result === 1 ? "won." : otherPlayer.result === null ? "it was a draw." : "lost.";
     return str;
 }
 function showResults(otherPlayer)
@@ -28,12 +36,7 @@ function showResults(otherPlayer)
     userConsole.appendText(createConsoleResultMsg(otherPlayer));
     updateWinStreak(otherPlayer);
     mainScreen.show("result_screen");
-    setTimeout(function()
-    {
-        console.log("WISISIT");
-        mainScreen.show("choose_screen");
-
-    }, 2000);
+    setTimeout(function() { mainScreen.show("choose_screen"); }, 2000);
 }
 function updateWinStreak(otherPlayer)
 {
@@ -49,21 +52,10 @@ function updateWinStreak(otherPlayer)
     mainScreen.screens.result_screen.elem.innerHTML = your_result;
     bottomBar["win-streak"].setText("Win-Streak: "+winStreak);
 }
-function sendRock()
+function doMove(choice)
 {
-    socket.doMove("r");
+    socket.doMove(choice);
     mainScreen.show("selected_screen");
-    document.getElementById("selected_text").innerHTML = "Rock selected!";
-}
-function sendPaper()
-{
-    socket.doMove("p");
-    mainScreen.show("selected_screen");
-    document.getElementById("selected_text").innerHTML = "Paper selected!";
-}
-function sendScissor()
-{
-    socket.doMove("s");
-    mainScreen.show("selected_screen");
-    document.getElementById("selected_text").innerHTML = "Scissor selected!";
+    document.getElementById("selected_text").innerHTML = expandRPS(choice)+" selected!";
+    chatInput.focus();
 }

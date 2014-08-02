@@ -42,6 +42,11 @@ MainServer.prototype.handleNickChange = function(client, nick)
     for(var i=0; i<this.games.length; i++)
         this.games[i].handleNickChange(client, nick);
 };
+MainServer.prototype.handleChat = function(client, msg)
+{
+    for(var i=0; i<this.games.length; i++)
+        this.games[i].handleChat(client, msg);
+};
 //********==================================================
 exports.MainServer = MainServer;
 //********==================================================

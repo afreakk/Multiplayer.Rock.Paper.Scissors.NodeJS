@@ -16,6 +16,11 @@ AGame.prototype.addPlayer= function(client)
     var player = new playerModule.Player(client);
     this.players[player.socket.userid] = player;
 };
+AGame.prototype.handleChat=function(client, msg)
+{
+    if(client.userid in this.players)
+        this.broadcast("chat", client.userName+": "+msg);
+};
 AGame.prototype.noticeFull=function()
 {
     if(this.isFull())
@@ -69,7 +74,10 @@ AGame.prototype.hasPlayer=function(client)
 AGame.prototype.handleNickChange = function(client, nick)
 {
     if(client.userid in this.players)
+    {
         this.players[client.userid].setNick(nick);
+        client.userName = nick;
+    }
     this.noticeFull();
 };
 //********==================================================

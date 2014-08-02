@@ -1,23 +1,16 @@
-function loginInit(login)
-{
-    window.onkeyup = function(e)
-    {
-        login.keyCheck(e);
-    };
-}
-//----
 var LoginScreen = function(callback)
 {
     this.callback = callback;
-    this.elem = new HTMLElement("login", true);
-    loginInit(this);
+    this.loginScreen = new HTMLElement("login", true);
+    this.loginTextInput = new HTMLElement("nick_input", true);
+    inputMgr.receiveKeyUp("login", this);
 };
-LoginScreen.prototype.keyCheck = function(e)
+LoginScreen.prototype.keyUp = function(e)
 {
-    var elm = document.getElementById("nick_input");
-    if (e.keyCode == 13 && elm.value.length > 0) 
+    if (e.keyCode == 13 && this.loginTextInput.elem.value.length > 0) 
     {
-        this.elem.hide();
-        this.callback(elm.value);
+        this.loginScreen.hide();
+        this.callback(this.loginTextInput.getValue());
+        inputMgr.stopKeyUp("login");
     }
 };
